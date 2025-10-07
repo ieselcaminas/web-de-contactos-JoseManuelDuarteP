@@ -70,4 +70,90 @@ final class PageController extends AbstractController
 
         return $this->render("ficha_contacto.html.twig", ["contacto" => $contacto]);
     }
+
+    #[Route('/contacto/update/{codigo?1}', name: 'update_contacto')]
+    public function update(ManagerRegistry $doctrine, $codigo): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $repositorio = $doctrine->getRepository(Contacto::class);
+        $contacto = $repositorio->find($codigo);
+
+        if ($contacto) {
+            $contacto->setNombre("Nuevo Nombre");
+            try {
+                $entityManager->flush();
+                return $this->render("ficha_contacto.html.twig", ["contacto" => $contacto]);
+            } catch (\Exception $e) {
+                return new Response("Error al actualizar el contacto: " . $e->getMessage());
+            }
+        } else {
+            return $this->render("ficha_contacto.html.twig", ["contacto" => null]);
+        }
+    }
+
+    #[Route('/contacto/delete/{codigo?1}', name: 'delete_contacto')]
+    public function delete(ManagerRegistry $doctrine, $codigo): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $repositorio = $doctrine->getRepository(Contacto::class);
+        $contacto = $repositorio->find($codigo);
+
+        if ($contacto) {
+            $entityManager->remove($contacto);
+            $entityManager->flush();
+            return new Response("Contacto eliminado correctamente");
+        } else {
+            return new Response("No se ha encontrado el contacto con código $codigo");
+        }
+    }
+
+    #[Route('/contactoConProvincia/insertar/{codigo?1}', name: 'update_contactoConProvincia')]
+    public function createContactoConProvincia(ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $provincia = new \App\Entity\Provincia();
+
+        $provincia->setNombre("Alicante");
+        $contacto = new Contacto();
+
+        $contacto->setNombre("Contacto con provincia");
+        $contacto->setTelefono("123456789");
+        $contacto->setEmail("dwadwa@fe.cwa");
+        $contacto->setProvincia($provincia);
+
+        $entityManager->persist($provincia);
+        $entityManager->persist($contacto);
+
+        try {
+            $entityManager->flush();
+            return new Response("Contacto con provincia insertado correctamente");
+        } catch (\Exception $e) {
+            return new Response("Error al insertar el contacto con provincia: " . $e->getMessage());
+        }
+    }
+
+    #[Route('/contactoSinProvincia/insertar/{codigo?1}', name: 'update_contactoSinProvincia')]
+    public function createContactoSinProvincia(ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $repositorio = $doctrine->getRepository(\App\Entity\Provincia::class);
+
+        $provincia = $repositorio->findOneBy(['nombre' => 'Alicante']);
+
+        $contacto = new Contacto();
+
+        $contacto->setNombre("Contacto sin provincia");
+        $contacto->setTelefono("987654321");
+        $contacto->setEmail("fcwafwa@fes.fea");
+        $contacto->setProvincia($provincia);
+
+        $entityManager->persist($contacto);
+
+        try {
+            $entityManager->flush();
+            return new Response("Contacto sin provincia insertado correctamente");
+        } catch (\Exception $e) {
+            return new Response("Error al insertar el contacto sin provincia: " . $e->getMessage());
+        }
+    }
 }
