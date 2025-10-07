@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Contacto;
+use App\Entity\Provincia;
 
 final class PageController extends AbstractController
 {
@@ -111,7 +112,7 @@ final class PageController extends AbstractController
     public function createContactoConProvincia(ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
-        $provincia = new \App\Entity\Provincia();
+        $provincia = new Provincia();
 
         $provincia->setNombre("Alicante");
         $contacto = new Contacto();
@@ -136,7 +137,7 @@ final class PageController extends AbstractController
     public function createContactoSinProvincia(ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
-        $repositorio = $doctrine->getRepository(\App\Entity\Provincia::class);
+        $repositorio = $doctrine->getRepository(Provincia::class);
 
         $provincia = $repositorio->findOneBy(['nombre' => 'Alicante']);
 
