@@ -6,6 +6,6 @@
 
     <li><strong>E-mail</strong>: {{ contacto.email }}</li>
 
-    <li><strong>Provincia</strong>: {{ contacto.provincia.nombre }}</li>
+    <li><strong>Provincia</strong>: {{ contacto.provincia.nombre|default("Sin provincia") }}</li>
 
 </ul>
