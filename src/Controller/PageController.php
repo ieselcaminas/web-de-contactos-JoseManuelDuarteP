@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Contacto;
 use App\Entity\Provincia;
+use App\Form\ContactoFormType as ContactoType;
+use Symfony\Component\HttpFoundation\Request;
 
 final class PageController extends AbstractController
 {
@@ -156,5 +158,26 @@ final class PageController extends AbstractController
         } catch (\Exception $e) {
             return new Response("Error al insertar el contacto sin provincia: " . $e->getMessage());
         }
+    }
+
+    #[Route('/contactoN/nuevo', name: 'nuevo_contacto')]
+    public function nuevo(ManagerRegistry $doctrine, Request $request) {
+        $contacto = new Contacto();
+        $form = $this->createForm(ContactoType::class, $contacto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contacto = $form->getData();
+
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($contacto);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('ficha_contacto', ['codigo' => $contacto->getId()]);
+        }
+
+        return $this->render('nuevo.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
