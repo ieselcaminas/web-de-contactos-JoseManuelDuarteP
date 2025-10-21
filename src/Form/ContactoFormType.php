@@ -24,6 +24,7 @@ class ContactoFormType extends AbstractType
                 'choice_label' => 'nombre',
             ])
             ->add('save', SubmitType::class, ['label' => 'Enviar'])
+            ->add('cancelar', SubmitType::class, ['label' => 'Cancelar'])
         ;
     }
 

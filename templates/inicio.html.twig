@@ -4,4 +4,26 @@
 	<h1>Contactos</h1>
 	<h2>Bienvenido a la web de contactos.</h2>
 	<p>Página de inicio</p>
+
+	{% if app.user %}
+		<p>Hola {{ app.user.name }}.</p>
+		<p>He aquí tus contactos</p>
+
+		<ul>
+			{% for contacto in contactos %}
+				<li>
+					<a href="{{ path('ficha_contacto', {'codigo': contacto.id}) }}">
+						{{ contacto.nombre }}
+					</a>
+				</li>
+			{% else %}
+				<li>No tienes contactos aún.</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>
+			<a href="{{ path('app_register') }}">Regístrate</a> o
+			<a href="{{ path('login') }}">Inicia sesión</a> para gestionar tus contactos.
+		</p>
+	{% endif %}
 {% endblock %}

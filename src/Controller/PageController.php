@@ -33,9 +33,14 @@ final class PageController extends AbstractController
     }
 
     #[Route('/', name: 'inicio')]
-    public function inicio(): Response
+    public function inicio(ManagerRegistry $doctrine): Response
     {
-        return $this->render('inicio.html.twig');
+        $repositorio = $doctrine->getRepository(Contacto::class);
+        $contactos = $repositorio->findAll();
+
+        return $this->render('inicio.html.twig', [
+            'contactos' => $contactos,
+        ]);
     }
 
     /*#[Route('/contacto/{codigo?1}', name: 'ficha_contacto')]
@@ -65,7 +70,7 @@ final class PageController extends AbstractController
         }
     }
 
-    #[Route('/contacto/{codigo?1}', name: 'ficha_contacto')]
+    #[Route('/contacto/{codigo}', name: 'ficha_contacto')]
     public function ficha(ManagerRegistry $doctrine, $codigo): Response
     {
         $repositorio = $doctrine->getRepository(Contacto::class);
@@ -201,7 +206,7 @@ final class PageController extends AbstractController
                 return $this->redirectToRoute('ficha_contacto', ["codigo" => $contacto->getId()]);
 
             }
-            return $this->render('nuevo.html.twig', array(
+            return $this->render('actualizarContacto.html.twig', array(
                 'form' => $formulario->createView()
             ));
 
@@ -211,5 +216,4 @@ final class PageController extends AbstractController
             ]);
         }
     }
-
 }

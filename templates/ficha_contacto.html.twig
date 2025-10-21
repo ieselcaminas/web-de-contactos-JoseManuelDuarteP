@@ -4,6 +4,8 @@
     <h1>Ficha del contacto</h1>
     {% if contacto %}
         {% include 'partials/datos_contacto.html.twig' %}
+
+        <button onclick="location.href='{{ path('editar', {'codigo': contacto.id} )}}'">Editar Contacto</button>
     {% else %}
         <h4>Contacto no encontrado</h4>
     {% endif %}
