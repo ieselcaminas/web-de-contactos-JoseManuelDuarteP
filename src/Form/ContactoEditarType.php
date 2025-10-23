@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
-class ContactoFormType extends AbstractType
+class ContactoEditarType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,6 +24,7 @@ class ContactoFormType extends AbstractType
                 'choice_label' => 'nombre',
             ])
             ->add('save', SubmitType::class, ['label' => 'Enviar'])
+            ->add('cancelar', SubmitType::class, ['label' => 'Cancelar'])
         ;
     }
 

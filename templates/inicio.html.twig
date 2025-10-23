@@ -20,6 +20,7 @@
 				<li>No tienes contactos aún.</li>
 			{% endfor %}
 		</ul>
+		<a href="{{ path('nuevo_contacto') }}">Crear nuevo contacto</a>
 	{% else %}
 		<p>
 			<a href="{{ path('app_register') }}">Regístrate</a> o

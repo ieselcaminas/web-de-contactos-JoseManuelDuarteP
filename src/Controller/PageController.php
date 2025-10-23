@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Contacto;
 use App\Entity\Provincia;
 use App\Form\ContactoFormType as ContactoType;
+use App\Form\ContactoEditarType;
 use Symfony\Component\HttpFoundation\Request;
 
 final class PageController extends AbstractController
@@ -73,6 +74,9 @@ final class PageController extends AbstractController
     #[Route('/contacto/{codigo}', name: 'ficha_contacto')]
     public function ficha(ManagerRegistry $doctrine, $codigo): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('inicio');
+        }
         $repositorio = $doctrine->getRepository(Contacto::class);
         $contacto = $repositorio->find($codigo);
 
@@ -167,6 +171,9 @@ final class PageController extends AbstractController
 
     #[Route('/contactoN/nuevo', name: 'nuevo_contacto')]
     public function nuevo(ManagerRegistry $doctrine, Request $request) {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('inicio');
+        }
         $contacto = new Contacto();
         $form = $this->createForm(ContactoType::class, $contacto);
         $form->handleRequest($request);
@@ -188,22 +195,30 @@ final class PageController extends AbstractController
 
     #[Route('/contacto/editar/{codigo}', name: 'editar', requirements:["codigo"=>"\d+"])]
     public function editar(ManagerRegistry $doctrine, Request $request, int $codigo) {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('inicio');
+        }
 
         $repositorio = $doctrine->getRepository(Contacto::class);
         $contacto = $repositorio->find($codigo);
 
         if ($contacto){
 
-            $formulario = $this->createForm(ContactoType::class, $contacto);
+            $formulario = $this->createForm(ContactoEditarType::class, $contacto);
             $formulario->handleRequest($request);
 
-            if ($formulario->isSubmitted() && $formulario->isValid()) {
+            if ($formulario->isSubmitted()) {
+                if ($formulario->get('cancelar')->isClicked()) {
+                    return $this->redirectToRoute('inicio');
+                }
 
-                $contacto = $formulario->getData();
-                $entityManager = $doctrine->getManager();
-                $entityManager->persist($contacto);
-                $entityManager->flush();
-                return $this->redirectToRoute('ficha_contacto', ["codigo" => $contacto->getId()]);
+                if ($formulario->isValid()) {
+                    $contacto = $formulario->getData();
+                    $entityManager = $doctrine->getManager();
+                    $entityManager->persist($contacto);
+                    $entityManager->flush();
+                    return $this->redirectToRoute('ficha_contacto', ["codigo" => $contacto->getId()]);
+                }          
 
             }
             return $this->render('actualizarContacto.html.twig', array(
