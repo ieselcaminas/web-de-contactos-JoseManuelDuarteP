@@ -203,7 +203,6 @@ final class PageController extends AbstractController
         $contacto = $repositorio->find($codigo);
 
         if ($contacto){
-
             $formulario = $this->createForm(ContactoEditarType::class, $contacto);
             $formulario->handleRequest($request);
 
@@ -211,7 +210,6 @@ final class PageController extends AbstractController
                 if ($formulario->get('cancelar')->isClicked()) {
                     return $this->redirectToRoute('inicio');
                 }
-
                 if ($formulario->isValid()) {
                     $contacto = $formulario->getData();
                     $entityManager = $doctrine->getManager();

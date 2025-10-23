@@ -16,16 +16,16 @@ class Contacto
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    private ?string $nombre = null;
+    private ?string $nombre = "";
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    private ?string $telefono = null;
+    private ?string $telefono = "";
 
     #[ORM\Column(type:"string", length: 255)]
     #[Assert\NotBlank]
     #[Assert\Email(message: 'El email {{ value }} no es un email válido.')]
-    private ?string $email = null;
+    private ?string $email = "";
 
     #[ORM\ManyToOne(inversedBy: 'contactos')]
     #[Assert\NotBlank]
