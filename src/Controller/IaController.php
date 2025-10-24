@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IaController extends AbstractController
 {
-    //No puedo poner la clave aqui porque OpenRouter la detecta y bloquea la bloquea
+    //No puedo poner la clave aqui porque OpenRouter la detecta y la bloquea
     //Puedes encontarla en el readme fragmentada
     //Se copia toda junta y ya funciona
     private const API_KEY = '';
